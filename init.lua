@@ -868,7 +868,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {},
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -876,7 +876,7 @@ require('lazy').setup({
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
+        additional_vim_regex_highlighting = {},
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
@@ -933,25 +933,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  -- Claude artificial intelligence
-  -- {
-  --   'pasky/claude.vim',
-  --   lazy = false,
-  --   config = function()
-  --     -- Load API key from environment variable
-  --     local api_key = os.getenv 'ANTHROPIC_API_KEY'
-  --     if api_key then
-  --       vim.g.claude_api_key = api_key
-  --     else
-  --       vim.notify('ANTHROPIC_API_KEY environment variable is not set', vim.log.levels.WARN)
-  --     end
-  --
-  --     -- Add keymaps (the default conflict with NVChad.  Skip if you want)
-  --     vim.keymap.set('v', '<leader>Ci', ":'<,'>ClaudeImplement ", { noremap = true, desc = 'Claude Implement' })
-  --     vim.keymap.set('n', '<leader>Cc', ':ClaudeChat<CR>', { noremap = true, silent = true, desc = 'Claude Chat' })
-  --   end,
-  -- },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
