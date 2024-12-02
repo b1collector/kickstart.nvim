@@ -808,6 +808,18 @@ require('lazy').setup({
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
     end,
+    opts = {
+      on_highlights = function(hl, c)
+        hl.ColorColumn = {
+          bg = c.bg_highlight,
+        }
+      end,
+    },
+    config = function(_, opts)
+      require('tokyonight').setup(opts)
+      vim.cmd [[colorscheme tokyonight]]
+      vim.opt.colorcolumn = '100'
+    end,
   },
 
   -- Highlight todo, notes, etc in comments
