@@ -21,9 +21,6 @@ vim.opt.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
--- Don't wrap lines
-vim.opt_local.wrap = false
-
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -55,9 +52,6 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
@@ -111,12 +105,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
--- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
--- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
--- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -140,8 +128,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
-end ---@diagnostic disable-next-line: undefined-field
-vim.opt.rtp:prepend(lazypath)
+end
+
+---@type vim.Option
+local rtp = vim.opt.rtp
+rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
 --
@@ -156,7 +147,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -192,9 +183,6 @@ require('lazy').setup({
       },
     },
   },
-
-  -- navigate between indent levels
-  'jeetsukumaran/vim-indentwise',
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -394,8 +382,8 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'williamboman/mason.nvim', opts = {} },
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', opts = {} },
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -808,18 +796,6 @@ require('lazy').setup({
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
     end,
-    opts = {
-      on_highlights = function(hl, c)
-        hl.ColorColumn = {
-          bg = c.bg_highlight,
-        }
-      end,
-    },
-    config = function(_, opts)
-      require('tokyonight').setup(opts)
-      vim.cmd [[colorscheme tokyonight]]
-      vim.opt.colorcolumn = '100'
-    end,
   },
 
   -- Highlight todo, notes, etc in comments
@@ -880,12 +856,6 @@ require('lazy').setup({
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -916,23 +886,6 @@ require('lazy').setup({
   -- you can continue same window with `<space>sr` which resumes last telescope search
 
   { 'ionide/Ionide-vim', ft = 'fsharp' },
-
-  -- generic ai plugin
-  {
-    'frankroeder/parrot.nvim',
-    dependencies = { 'ibhagwan/fzf-lua', 'nvim-lua/plenary.nvim' },
-    opts = {},
-    config = function()
-      require('parrot').setup {
-        -- Providers must be explicitly added to make them available.
-        providers = {
-          anthropic = {
-            api_key = os.getenv 'ANTHROPIC_API_KEY',
-          },
-        },
-      }
-    end,
-  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
