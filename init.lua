@@ -132,11 +132,11 @@ vim.keymap.set('n', '<leader>rc', ':e ~/AppData/Local/nvim/init.lua<CR>', { desc
 
 -- Copy Full File-Path
 vim.keymap.set('n', '<leader>pa', function()
-  local path = vim.fn.expand '%:p'
+  local p = vim.fn.expand '%:~:.'
+  local path = p:gsub('\\', '/')
   vim.fn.setreg('+', path)
   print('file:', path)
-end)
-
+end, { desc = 'Copy current file full path' })
 
 -- Auto-close terminal when process exits
 vim.api.nvim_create_autocmd('TermClose', {
@@ -299,7 +299,7 @@ local function smart_close_buffer()
     vim.cmd 'tabclose'
   end
 end
-vim.keymap.set('n', '<leader>bd', smart_close_buffer, { desc = 'Smart close buffer/tab' })
+vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Smart close buffer/tab' })
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
