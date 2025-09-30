@@ -73,8 +73,8 @@ vim.opt.guicursor =
 
 -- Folding settings
 vim.opt.foldmethod = 'expr' -- Use expression for folding
-vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use treesitter for folding
-vim.opt.foldlevel = 99 -- Start with all folds open
+-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use treesitter for folding
+-- vim.opt.foldlevel = 99 -- Start with all folds open
 
 -- Split behavior
 vim.opt.splitbelow = true -- Horizontal splits go below
@@ -1125,7 +1125,7 @@ require('lazy').setup({
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
 
-  { 'ionide/Ionide-vim', ft = 'fsharp' },
+  --{ 'ionide/Ionide-vim', ft = 'fsharp' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
