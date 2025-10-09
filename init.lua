@@ -73,8 +73,8 @@ vim.opt.guicursor =
 
 -- Folding settings
 vim.opt.foldmethod = 'expr' -- Use expression for folding
-vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use treesitter for folding
-vim.opt.foldlevel = 99 -- Start with all folds open
+-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use treesitter for folding
+-- vim.opt.foldlevel = 99 -- Start with all folds open
 
 -- Split behavior
 vim.opt.splitbelow = true -- Horizontal splits go below
@@ -820,9 +820,30 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
-
+        ts_ls = {
+          settings = {
+            typescript = {
+              format = {
+                insertSpaceAfterOpeningAndBeforeClosingEmptyBraces = false,
+                insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = false,
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = false,
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets = false,
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = false,
+                insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = false,
+              },
+            },
+            javascript = {
+              format = {
+                insertSpaceAfterOpeningAndBeforeClosingEmptyBraces = false,
+                insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = false,
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = false,
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets = false,
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = false,
+                insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = false,
+              },
+            },
+          },
+        },
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -855,6 +876,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        --'typescript-language-server', -- TypeScript/JavaScript LSP
+        'eslint_d',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -907,6 +930,10 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        javascriptreact = { 'eslint_d' },
+        javascript = { 'eslint_d' },
+        typescript = { 'eslint_d' },
+        typescriptreact = { 'eslint_d' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -1033,7 +1060,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-storm'
     end,
   },
 
@@ -1124,7 +1151,6 @@ require('lazy').setup({
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
 
-  { 'ionide/Ionide-vim', ft = 'fsharp' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
