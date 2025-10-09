@@ -137,7 +137,6 @@ vim.keymap.set('n', '<leader>pa', function()
   print('file:', path)
 end)
 
-
 -- Auto-close terminal when process exits
 vim.api.nvim_create_autocmd('TermClose', {
   group = augroup,
@@ -302,7 +301,7 @@ end
 vim.keymap.set('n', '<leader>bd', smart_close_buffer, { desc = 'Smart close buffer/tab' })
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
