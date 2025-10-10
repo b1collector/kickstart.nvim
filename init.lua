@@ -3,82 +3,112 @@ vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' })
 
--- Basic settings
-vim.opt.number = true -- Line numbers
-vim.opt.relativenumber = true -- Relative line numbers
-vim.opt.cursorline = true -- Highlight current line
-vim.opt.wrap = false -- Don't wrap lines
-vim.opt.scrolloff = 10 -- Keep 10 lines above/below cursor
-vim.opt.sidescrolloff = 8 -- Keep 8 columns left/right of cursor
+-- Set to true if you have a Nerd Font installed and selected in the terminal
+vim.g.have_nerd_font = true
+
+-- Line numbers
+vim.opt.number = true
+vim.opt.relativenumber = true
+
+-- Display
+vim.opt.cursorline = true
+vim.opt.wrap = false
+vim.opt.scrolloff = 10
+vim.opt.sidescrolloff = 8
+vim.opt.signcolumn = 'yes'
+vim.opt.colorcolumn = '100'
+vim.opt.showmatch = true
+vim.opt.matchtime = 2
+vim.opt.showmode = false
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.termguicolors = true
 
 -- Indentation
-vim.opt.tabstop = 2 -- Tab width
-vim.opt.shiftwidth = 2 -- Indent width
-vim.opt.softtabstop = 2 -- Soft tab stop
-vim.opt.expandtab = true -- Use spaces instead of tabs
-vim.opt.smartindent = true -- Smart auto-indenting
-vim.opt.autoindent = true -- Copy indent from current line
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+vim.opt.breakindent = true
 
--- Search settings
-vim.opt.ignorecase = true -- Case insensitive search
-vim.opt.smartcase = true -- Case sensitive if uppercase in search
-vim.opt.hlsearch = true -- Highlight search results
-vim.opt.incsearch = true -- Show matches as you type
+-- Search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
+vim.opt.inccommand = 'split'
 
--- Visual settings
-vim.opt.termguicolors = true -- Enable 24-bit colors
-vim.opt.signcolumn = 'yes' -- Always show sign column
-vim.opt.colorcolumn = '100' -- Show column at 100 characters
-vim.opt.showmatch = true -- Highlight matching brackets
-vim.opt.matchtime = 2 -- How long to show matching bracket
-vim.opt.cmdheight = 1 -- Command line height
-vim.opt.completeopt = 'menuone,noinsert,noselect' -- Completion options
-vim.opt.showmode = false -- Don't show mode in command line
-vim.opt.pumheight = 10 -- Popup menu height
-vim.opt.pumblend = 10 -- Popup menu transparency
-vim.opt.winblend = 0 -- Floating window transparency
-vim.opt.conceallevel = 0 -- Don't hide markup
-vim.opt.concealcursor = '' -- Don't hide cursor line markup
-vim.opt.lazyredraw = true -- Don't redraw during macros
-vim.opt.synmaxcol = 300 -- Syntax highlighting limit
+-- Completion
+vim.opt.completeopt = 'menuone,noinsert,noselect'
+vim.opt.pumheight = 10
+vim.opt.pumblend = 10
+vim.opt.cmdheight = 1
+
+-- Splits
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 -- File handling
-vim.opt.backup = false -- Don't create backup files
-vim.opt.writebackup = false -- Don't create backup before writing
-vim.opt.swapfile = false -- Don't create swap files
-vim.opt.undofile = true -- Persistent undo
-vim.opt.undodir = vim.fn.expand '~/.vim/undodir' -- Undo directory
-vim.opt.updatetime = 300 -- Faster completion
-vim.opt.timeoutlen = 500 -- Key timeout duration
-vim.opt.ttimeoutlen = 0 -- Key code timeout
-vim.opt.autoread = true -- Auto reload files changed outside vim
-vim.opt.autowrite = false -- Don't auto save
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.swapfile = false
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.expand '~/.vim/undodir'
+vim.opt.autoread = true
+vim.opt.autowrite = false
+vim.opt.confirm = true
 
--- Behavior settings
-vim.opt.hidden = true -- Allow hidden buffers
-vim.opt.errorbells = false -- No error bells
-vim.opt.backspace = 'indent,eol,start' -- Better backspace behavior
-vim.opt.autochdir = false -- Don't auto change directory
-vim.opt.iskeyword:append '-' -- Treat dash as part of word
-vim.opt.path:append '**' -- include subdirectories in search
-vim.opt.selection = 'exclusive' -- Selection behavior
-vim.opt.mouse = 'a' -- Enable mouse support
-vim.opt.clipboard:append 'unnamedplus' -- Use system clipboard
-vim.opt.modifiable = true -- Allow buffer modifications
-vim.opt.encoding = 'UTF-8' -- Set encoding
+-- Timing
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.ttimeoutlen = 0
 
--- Cursor settings
+-- Behavior
+vim.opt.hidden = true
+vim.opt.errorbells = false
+vim.opt.backspace = 'indent,eol,start'
+vim.opt.autochdir = false
+vim.opt.iskeyword:append '-'
+vim.opt.path:append '**'
+vim.opt.selection = 'exclusive'
+vim.opt.modifiable = true
+vim.opt.encoding = 'UTF-8'
+vim.opt.mouse = 'a'
+
+-- Clipboard (scheduled after UiEnter)
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
+
+-- Cursor
 vim.opt.guicursor =
   'n-v-c:block,i-ci-ve:block,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175'
 
--- Folding settings
-vim.opt.foldmethod = 'expr' -- Use expression for folding
--- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use treesitter for folding
--- vim.opt.foldlevel = 99 -- Start with all folds open
+-- Folding
+vim.opt.foldmethod = 'expr'
+-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+-- vim.opt.foldlevel = 99
 
--- Split behavior
-vim.opt.splitbelow = true -- Horizontal splits go below
-vim.opt.splitright = true -- Vertical splits go right
+-- Visual effects
+vim.opt.conceallevel = 0
+vim.opt.concealcursor = ''
+vim.opt.lazyredraw = true
+vim.opt.synmaxcol = 300
+vim.opt.winblend = 0
+
+-- Command-line
+vim.opt.wildmenu = true
+vim.opt.wildmode = 'longest:full,full'
+vim.opt.wildignore:append { '*.o', '*.obj', '*.pyc', '*.class', '*.jar' }
+
+-- Diff
+vim.opt.diffopt:append 'linematch:60'
+
+-- Performance
+vim.opt.redrawtime = 10000
+vim.opt.maxmempattern = 20000
 
 -- Key mappings
 vim.g.mapleader = ' ' -- Set leader key to space
@@ -301,80 +331,13 @@ local function smart_close_buffer()
 end
 vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Smart close buffer/tab' })
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true
-
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
-vim.opt.number = true
-vim.opt.relativenumber = true
-
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
-
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
-
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
-
--- Enable break indent
-vim.opt.breakindent = true
-
--- Save undo history
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
-
--- Decrease update time
-vim.opt.updatetime = 250
-
--- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
-
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
--- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
-
--- Show which line your cursor is on
-vim.opt.cursorline = true
-
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
-
--- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
--- instead raise a dialog asking if you wish to save the current file(s)
--- See `:help 'confirm'`
-vim.opt.confirm = true
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
-
--- Clear highlights on search when pressing <Esc> in normal mode
---  See `:help hlsearch`
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
--- Add a short cut to exit from input mode.
-vim.keymap.set('i', 'jj', '<Esc>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
