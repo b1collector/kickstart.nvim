@@ -88,8 +88,8 @@ vim.opt.guicursor =
 
 -- Folding
 vim.opt.foldmethod = 'expr'
--- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
--- vim.opt.foldlevel = 99
+--vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use treesitter for folding
+vim.opt.foldlevel = 99 -- Start with all folds open
 
 -- Visual effects
 vim.opt.conceallevel = 0
@@ -97,6 +97,10 @@ vim.opt.concealcursor = ''
 vim.opt.lazyredraw = true
 vim.opt.synmaxcol = 300
 vim.opt.winblend = 0
+
+-- Split behavior
+vim.opt.splitbelow = true -- Horizontal splits go below
+vim.opt.splitright = true -- Vertical splits go right
 
 -- Command-line
 vim.opt.wildmenu = true
