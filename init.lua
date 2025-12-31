@@ -44,7 +44,7 @@ vim.opt.inccommand = 'split'
 vim.opt.completeopt = 'menuone,noinsert,noselect'
 vim.opt.pumheight = 10
 vim.opt.pumblend = 10
-vim.opt.cmdheight = 1
+vim.opt.cmdheight = 2
 
 -- Splits
 vim.opt.splitbelow = true
@@ -215,13 +215,78 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Smart close buffer/tab' })
 
+-- ============================================================================
+-- BUILT-IN STATUSLINE CONFIGURATION
+-- ============================================================================
+
+-- Custom statusline function
+local function statusline()
+  local mode = vim.api.nvim_get_mode().mode
+  local mode_map = {
+    n = 'NORMAL',
+    i = 'INSERT',
+    v = 'VISUAL',
+    V = 'V-LINE',
+    [''] = 'V-BLOCK',
+    c = 'COMMAND',
+    s = 'SELECT',
+    S = 'S-LINE',
+    [''] = 'S-BLOCK',
+    R = 'REPLACE',
+    r = 'REPLACE',
+    ['!'] = 'SHELL',
+    t = 'TERMINAL',
+  }
+
+  local current_mode = mode_map[mode] or mode:upper()
+
+  -- File info
+  local filename = vim.fn.expand '%:t'
+  if filename == '' then
+    filename = '[No Name]'
+  end
+
+  local modified = vim.bo.modified and '[+]' or ''
+  local readonly = vim.bo.readonly and '[RO]' or ''
+
+  -- Git info (if available)
+  local git_info = ''
+  if vim.b.gitsigns_head then
+    git_info = '  ' .. vim.b.gitsigns_head
+  end
+
+  -- LSP info
+  local lsp_info = ''
+  local clients = vim.lsp.get_clients { bufnr = 0 }
+  if #clients > 0 then
+    lsp_info = ' LSP'
+  end
+
+  -- File type
+  local filetype = vim.bo.filetype ~= '' and ' ' .. vim.bo.filetype or ''
+
+  -- Cursor position
+  local cursor_pos = string.format('%2d:%-2d', vim.fn.line '.', vim.fn.col '.')
+
+  -- Build statusline
+  return string.format(' %s │ %s%s%s%s%s%s %%=%s │ %s ', current_mode, filename, modified, readonly, git_info, lsp_info, filetype, cursor_pos, '%P')
+end
+
+-- Make statusline function globally available
+_G.statusline = statusline
+
+-- Set the statusline
+vim.opt.statusline = '%!v:lua.statusline()'
+
+-- Always show statusline
+vim.opt.laststatus = 2
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
 -- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -932,21 +997,6 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
