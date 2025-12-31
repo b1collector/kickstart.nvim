@@ -281,6 +281,57 @@ vim.opt.statusline = '%!v:lua.statusline()'
 -- Always show statusline
 vim.opt.laststatus = 2
 
+-- ============================================================================
+-- FLOATING TERMINAL CONFIGURATION
+-- ============================================================================
+
+local terminal_state = { buf = nil, win = nil }
+
+local function toggle_floating_terminal()
+  -- If terminal window exists and is valid, close it
+  if terminal_state.win and vim.api.nvim_win_is_valid(terminal_state.win) then
+    vim.api.nvim_win_close(terminal_state.win, false)
+    terminal_state.win = nil
+    return
+  end
+
+  -- Create buffer if it doesn't exist or is invalid
+  if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
+    terminal_state.buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[terminal_state.buf].bufhidden = 'hide'
+  end
+
+  -- Calculate 80% window size
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  -- Create floating window
+  terminal_state.win = vim.api.nvim_open_win(terminal_state.buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+  })
+
+  -- Start terminal if buffer is empty
+  local lines = vim.api.nvim_buf_get_lines(terminal_state.buf, 0, -1, false)
+  local is_empty = #lines == 1 and lines[1] == ''
+  if is_empty then
+    vim.fn.termopen(os.getenv 'SHELL' or 'sh')
+  end
+
+  -- Enter insert mode
+  vim.cmd 'startinsert'
+end
+
+-- Terminal keymap
+vim.keymap.set('n', '<leader>ts', toggle_floating_terminal, { desc = 'Toggle floating terminal' })
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
