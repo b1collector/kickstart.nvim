@@ -158,7 +158,11 @@ vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Join lines and keep cursor position'
 vim.keymap.set('i', 'jj', '<Esc>', { desc = 'Use in lue of <Esc>' })
 
 -- Quick config editing
-vim.keymap.set('n', '<leader>rc', ':e ~/AppData/Local/nvim/init.lua<CR>', { desc = 'Edit config' })
+if vim.fn.has 'win32' == 1 then
+  vim.keymap.set('n', '<leader>rc', ':e ~/AppData/Local/nvim/init.lua<CR>', { desc = 'Edit config' })
+else
+  vim.keymap.set('n', '<leader>rc', ':e ~/.config/nvim/init.lua<CR>', { desc = 'Edit config' })
+end
 
 -- ============================================================================
 -- USEFUL FUNCTIONS
@@ -323,16 +327,6 @@ vim.keymap.set('t', '<Esc>', function()
   end
 end, { noremap = true, silent = true, desc = 'Close floating terminal from terminal mode' })
 
--- Function to close buffer but keep tab if it's the only buffer in tab
-local function smart_close_buffer()
-  local buffers_in_tab = #vim.fn.tabpagebuflist()
-  if buffers_in_tab > 1 then
-    vim.cmd 'bdelete'
-  else
-    -- If it's the only buffer in tab, close the tab
-    vim.cmd 'tabclose'
-  end
-end
 vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Smart close buffer/tab' })
 
 -- [[ Setting options ]]
@@ -1028,7 +1022,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-storm'
+      vim.cmd.colorscheme 'tokyonight-night'
     end,
   },
 
